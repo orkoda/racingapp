@@ -26,10 +26,10 @@
         </v-snackbar>
         <H2HInvite></H2HInvite>
         <H2HActive></H2HActive>
-        <v-layout>
+        <v-layout class="main-layout">
           <SideBar></SideBar>
           <div
-            class="tabs-container"
+            class="content-area"
             v-if="globalStore.currentPage === 'settings' || !hasProblem"
           >
             <RacingPage
@@ -143,6 +143,7 @@ const hasProblem = computed(() => {
   }
   return false;
 });
+
 document.onkeydown = function (evt) {
   if (evt?.key === "Escape") closeApp();
 };
@@ -162,14 +163,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-body {
-  overflow: hidden;
-}
-
-h2 {
-  margin-bottom: 0px;
-}
-
 .ui-container {
   height: 100vh;
   display: flex;
@@ -178,12 +171,50 @@ h2 {
   align-items: center;
   z-index: 2000;
   position: absolute;
-  // background: linear-gradient(180deg, rgba(5,11,19,0.95) 0%, rgba(10,25,41,0.95) 100%);
+}
+
+.screen-container {
+  width: 90vw;
+  height: 85vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(10, 25, 41, 0.98) 0%, rgba(5, 11, 19, 0.98) 100%);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.content-area {
+  flex: 1;
+  background: rgba(5, 11, 19, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 #revoked-message-container {
-  width: 100%;
-  margin-left: 56px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
 }
 
 .revoked-message-holder {
@@ -191,207 +222,40 @@ h2 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 2em 2em 2em 2em;
+  gap: 2em;
   color: white;
+  max-width: 600px;
+  text-align: center;
 }
 
-.screen-frame {
-  position: absolute;
-  pointer-events: none;
-  z-index: 10001;
-}
-
-.screen-container {
-  width: 70vw;
-  height: 80vh;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: $background-color;
-  padding: 1em;
-  border-radius: 1em;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  // backdrop-filter: blur(10px);
-}
-
-.app-container {
-  background: $background-color;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  position: relative;
-  display: flex;
-  height: calc(100% - 2.6em);
-  border-radius: 0.5em;
-}
-
-.tabs-container {
-  width: 100%;
-  margin-left: 56px;
-  background: $background-color-lighter;
-  border-radius: 0.5em;
-}
-
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
-  background: $background-color-lighter;
+  background: rgba(10, 25, 41, 0.5);
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: $secondary-color-light;
+  background: rgba(0, 209, 245, 0.3);
   border-radius: 4px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: $primary-color;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+  
+  &:hover {
+    background: rgba(0, 209, 245, 0.5);
   }
 }
 
-#track-items-loader {
-  display: none;
+/* Responsive design */
+@media (max-width: 1200px) {
+  .screen-container {
+    width: 95vw;
+    height: 90vh;
+  }
 }
 
-.confirmation-box {
-  position: absolute;
-  bottom: -100px;
-  width: 747px;
-  right: 0;
-  color: $text-color;
-  display: flex;
-  justify-content: center;
-}
-
-.confirmation-card {
-  color: $text-color;
-  background-color: $background-color-topbar;
-  border-radius: $border-radius;
-  width: 400px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: fit-content;
-}
-
-.confirmation-card-body {
-  display: flex;
-  justify-content: flex-end;
-  height: fit-content;
-}
-
-.confirmation-footer {
-  width: 100%;
-}
-
-/* TOOLTIP */
-*[data-tooltip] {
-  position: relative;
-}
-
-*[data-tooltip]::after {
-  content: attr(data-tooltip);
-
-  position: absolute;
-  top: -20px;
-  right: -40px;
-  width: 150px;
-
-  pointer-events: none;
-  opacity: 0;
-  -webkit-transition: opacity 0.15s ease-in-out;
-  -moz-transition: opacity 0.15s ease-in-out;
-  -ms-transition: opacity 0.15s ease-in-out;
-  -o-transition: opacity 0.15s ease-in-out;
-  transition: opacity 0.15s ease-in-out;
-
-  display: block;
-  font-size: 12px;
-  line-height: 16px;
-  background: $background-color-topbar;
-  padding: 4px 4px;
-  border: $border;
-  border-radius: $border-radius;
-}
-
-*[data-tooltip]:hover::after {
-  opacity: 1;
-}
-
-/* CHECKBOX */
-/* Customize the label (the container) */
-.checkbox-container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default checkbox */
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: $text-color-disabled;
-  border-radius: 4px;
-}
-
-/* On mouse-over, add a grey background color */
-.checkbox-container:hover input ~ .checkmark {
-  background-color: $text-color-disabled;
-}
-
-/* When the checkbox is checked, add a blue background */
-.checkbox-container input:checked ~ .checkmark {
-  background-color: $primary-color;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.checkbox-container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.checkbox-container .checkmark:after {
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+@media (max-width: 768px) {
+  .screen-container {
+    width: 98vw;
+    height: 95vh;
+    border-radius: 8px;
+  }
 }
 </style>
