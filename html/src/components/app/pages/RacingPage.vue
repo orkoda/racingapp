@@ -30,28 +30,30 @@
             ></CurrentRaceCard>
           </div>
         </div>
-        <div class="subheader mt-2">
-          <h3>{{ translate('available_races') }} </h3>
-        </div>
 
-        <div
-          v-if="isLoading"
-          class="loading-container"
-          id="available-races-loader"
-        >
-          <span class="loader"></span>
+        <!-- Happening Now Section -->
+        <div class="happening-now-section">
+          <h2 class="happening-title">HAPPENING NOW</h2>
+          
+          <div
+            v-if="isLoading"
+            class="loading-container"
+            id="available-races-loader"
+          >
+            <span class="loader"></span>
+          </div>
+          <div v-else class="races-grid">
+            <AvailableRacesCard
+              v-for="race in racesToDisplay"
+              :key="race.RaceId"
+              :race="race"
+            ></AvailableRacesCard>
+          </div>
+          <InfoText
+            v-if="races.length === 0"
+            :title="translate('no_races')"
+          ></InfoText>
         </div>
-        <div v-else class="available-races">
-          <AvailableRacesCard
-            v-for="race in racesToDisplay"
-            :key="race"
-            :race="race"
-          ></AvailableRacesCard>
-        </div>
-        <InfoText
-          v-if="races.length === 0"
-          :title="translate('no_races')"
-        ></InfoText>
       </v-window-item>
       <v-window-item  value="map" class="tabcontent">
         <RacingMapTab></RacingMapTab>
@@ -260,16 +262,26 @@ onMounted(() => {
   align-items: center;
   margin-right: 0.4em;
 }
-.available-races {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  gap: 1em;
-  margin-top: 1em;
-  margin-left: 0;
-  margin-right: 0;
-  width: fit-content;
+
+.happening-now-section {
+  margin-top: 2em;
+
+  .happening-title {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+}
+
+.races-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
 }
 
 .available-tracks {
